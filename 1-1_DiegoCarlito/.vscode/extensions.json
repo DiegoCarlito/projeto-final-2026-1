@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "github.copilot",
+    "github.copilot-chat",
+    "ms-python.python",
+    "ms-python.black-formatter",
+    "charliermarsh.ruff",
+    "ms-azuretools.vscode-docker"
+  ]
+}

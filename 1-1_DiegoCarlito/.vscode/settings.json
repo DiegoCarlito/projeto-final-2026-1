@@ -1,0 +1,17 @@
+{
+  "editor.inlineSuggest.enabled": true,
+
+  "github.copilot.enable": {
+    "*": true,
+    "markdown": false,
+    "plaintext": false,
+    "scminput": false
+  },
+
+  "github.copilot.nextEditSuggestions.enabled": true,
+  "github.copilot.nextEditSuggestions.fixes": true,
+
+  "github.copilot.chat.commitMessageGeneration.instructions": [
+    { "text": "Siga a tabela de commits do project-context.md. Inclua a racionalidade da decisão no corpo da mensagem." }
+  ]
+}
