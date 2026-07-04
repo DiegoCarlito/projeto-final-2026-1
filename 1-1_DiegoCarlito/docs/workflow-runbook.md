@@ -1,18 +1,18 @@
 # Workflow Runbook
 
 > **Projeto:** Previsão de Churn
-> **Aluno(a):** [seu nome]
+> **Aluno(a):** Diego Carlito Rodrigues de Souza
 
 ---
 
 ## Processo obrigatório de execução
 
-Siga as etapas abaixo na ordem indicada. Cada etapa deve gerar pelo menos um commit com mensagem descritiva e racionalidade (ver tabela de commits em `project-context.md`, seção 7).
+Siga as etapas abaixo na ordem indicada. Cada etapa deve gerar pelo menos um commit com mensagem descritiva e racionalidade.
 
 ### Etapa 1: Ler o Mission Brief
-- [ ] Ler e compreender o mission brief
-- [ ] Identificar entradas, saídas e restrições
-- [ ] Anotar dúvidas ou ambiguidades
+- [x] Ler e compreender o mission brief
+- [x] Identificar entradas, saídas e restrições
+- [x] Anotar dúvidas ou ambiguidades
 
 ### Etapa 2: Propor três soluções possíveis
 - [ ] Descrever solution-a (baseline simples)
