@@ -20,9 +20,9 @@ Siga as etapas abaixo na ordem indicada. Cada etapa deve gerar pelo menos um com
 - [x] **Descrever solution-c (fluxo multi-etapa com guardrails):** Evolução da solution-b com foco em confiabilidade (Reliable). Inclui validação rigorosa de entrada (guardrails via Pydantic), política de fallback com respostas pré-determinadas caso o LLM falhe ou demore, e tratamento condicional para clientes na "zona cinzenta" (probabilidade entre 45% e 55%).
 
 ### Etapa 3: Registrar cada solução em pasta separada
-- [ ] Criar `solutions/solution-a/`
-- [ ] Criar `solutions/solution-b/`
-- [ ] Criar `solutions/solution-c/`
+- [x] Criar `solutions/solution-a/`
+- [x] Criar `solutions/solution-b/`
+- [x] Criar `solutions/solution-c/`
 
 ### Etapa 4: Implementar protótipos mínimos
 - [ ] Implementar protótipo da solution-a
