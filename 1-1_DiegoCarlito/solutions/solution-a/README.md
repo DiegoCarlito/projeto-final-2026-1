@@ -8,7 +8,7 @@ A solução foi desenhada para priorizar baixo custo de processamento de LLM, al
 
 - **Foco:** Predição estatística rápida e geração de relatórios de risco padronizados.
 - **Modelo Tabular:** Regressão Logística (Scikit-Learn) — escolhida por ser inerentemente interpretável através de seus coeficientes globais.
-- **Camada de IA:** LLM (Gemini Pro via API) atuando estritamente com **Prompt Direto**. O LLM não deduz o risco; ele recebe a probabilidade calculada e a lista de variáveis de maior peso matemático para formatar uma resposta humanizada e sugerir a ação de retenção.
+- **Camada de IA:** LLM (Gemini 2.5 Flash) atuando estritamente com **Prompt Direto**. O LLM não deduz o risco; ele recebe a probabilidade calculada e a lista de variáveis de maior peso matemático para formatar uma resposta humanizada e sugerir a ação de retenção.
 
 ## Estrutura de Componentes
 
