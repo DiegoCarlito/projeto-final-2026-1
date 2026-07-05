@@ -30,7 +30,6 @@ O ecossistema foi desenhado em uma arquitetura **Híbrida (Estatística/Determin
 ```
 
 solutions/
-├── README.md
 ├── solution-a/             # Baseline: Regressão Logística + Prompt Direto
 │   ├── README.md
 │   ├── src/ (train.py, model_wrapper.py, agent_a.py, app.py)
@@ -39,10 +38,11 @@ solutions/
 │   ├── README.md
 │   ├── src/ (train.py, shap_tool.py, agent_b.py, app.py)
 │   └── tests/
-└── solution-c/             # Produção: Pipeline Resiliente com Guardrails & Fallback
-├── README.md
-├── src/ (train.py, shap_tool.py, guardrails.py, fallback.py, agent_c.py, app.py)
-└── tests/
+├── solution-c/             # Produção: Pipeline Resiliente com Guardrails & Fallback
+│   ├── README.md
+│   ├── src/ (train.py, shap_tool.py, guardrails.py, fallback.py, agent_c.py, app.py)
+│   └── tests/
+└── README.md
 
 ```
 
