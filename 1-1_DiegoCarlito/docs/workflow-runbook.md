@@ -15,9 +15,9 @@ Siga as etapas abaixo na ordem indicada. Cada etapa deve gerar pelo menos um com
 - [x] Anotar dúvidas ou ambiguidades
 
 ### Etapa 2: Propor três soluções possíveis
-- [ ] Descrever solution-a (baseline simples)
-- [ ] Descrever solution-b (explicabilidade como ferramenta)
-- [ ] Descrever solution-c (fluxo multi-etapa com guardrails)
+- [x] **Descrever solution-a (baseline simples):** Pipeline composto por um modelo tabular interpretável (Regressão Logística). O agente utiliza o LLM apenas como um formatador de texto (prompt direto), passando a probabilidade e as features mais importantes baseadas nos coeficientes globais do modelo.
+- [x] **Descrever solution-b (explicabilidade como ferramenta):** Agente que utiliza um modelo baseado em árvores (ex: Random Forest) e consulta uma ferramenta externa geradora de valores SHAP. A explicação do LLM é ancorada matematicamente no impacto local de cada variável para o cliente específico, evitando alucinações.
+- [x] **Descrever solution-c (fluxo multi-etapa com guardrails):** Evolução da solution-b com foco em confiabilidade (Reliable). Inclui validação rigorosa de entrada (guardrails via Pydantic), política de fallback com respostas pré-determinadas caso o LLM falhe ou demore, e tratamento condicional para clientes na "zona cinzenta" (probabilidade entre 45% e 55%).
 
 ### Etapa 3: Registrar cada solução em pasta separada
 - [ ] Criar `solutions/solution-a/`
