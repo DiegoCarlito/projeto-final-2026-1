@@ -59,4 +59,4 @@ Siga as etapas abaixo na ordem indicada. Cada etapa deve gerar pelo menos um com
 - [x] Docker sobe com um comando (`GEMINI_API_KEY=... docker compose up --build`, testado com e sem chave)
 - [x] API integrada a um produto/painel (`solutions/solution-c/static/index.html`, testado com Playwright)
 - [ ] `report.md` completo — escrito por completo, exceto dois pontos que só o aluno pode preencher: link de deploy público e vídeo de demonstração
-- [ ] Verificar que cada etapa tem pelo menos um commit com racionalidade
+- [x] Verificar que cada etapa tem pelo menos um commit com racionalidade — auditoria completa em `docs/ai-workflow/session-log.md` (Sessão 3): todos os 10 itens da tabela têm commit correspondente; commits #1–#4 (04–05/07, anteriores a esta sessão) não têm racionalidade no corpo — aceito como registro histórico, sem reescrita de commits já publicados

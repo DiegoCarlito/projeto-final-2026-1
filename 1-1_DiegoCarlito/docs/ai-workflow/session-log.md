@@ -108,8 +108,11 @@ O uso do GitHub Copilot e do chat do Gemini Pro para desenvolvimento foi descont
 
 ---
 
+19. **Auditoria final de commits vs. tabela do `project-context.md` §7:** todos os 10 itens têm pelo menos um commit correspondente. Dois achados registrados, não corrigidos: (a) commits #1–#4 (mission-brief, agent.md, mentorship-pack/workflow-runbook, solution-a — todos de 04–05/07, anteriores à consolidação em Claude Code) não têm racionalidade no corpo da mensagem, só o título, descumprindo a regra do §7; (b) os itens #9 (merge-readiness pack) e #10 (Docker/painel/report) foram para o mesmo commit (`d6300ae`) em vez de dois separados. Decisão do usuário: deixar como está — reescrever os commits #1–#4 exigiria rebase + force-push de histórico já publicado em `origin/main`, uma operação destrutiva não autorizada. Etapa 10 do Workflow Runbook fechada com essa ressalva registrada.
+
+---
+
 ### 3. Planejamento para a Próxima Sessão
 
 - Preencher os dois placeholders do `report.md`: link de deploy público (se houver) e vídeo de demonstração.
-- Conferir a régua de commits (cada etapa do runbook com pelo menos um commit com racionalidade) de ponta a ponta antes da entrega final (prazo 13/07/2026).
 - Considerar CI (GitHub Actions rodando pytest) — registrado como próximo passo no `report.md`, não bloqueante para a entrega.
