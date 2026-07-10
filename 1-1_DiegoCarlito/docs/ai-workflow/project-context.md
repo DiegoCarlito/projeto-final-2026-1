@@ -51,7 +51,7 @@ Este é o processo auditável que quero aplicar, com os artefatos abaixo. **Sua 
 
 - `agent.md` — como o agente (o sistema de churn) deve se comportar: papel, tom, ferramentas, restrições, formato de saída, critérios de parada, política de erro, como registrar decisões, como lidar com incerteza, quando escalar para humano.
 - `docs/mission-brief.md` — contrato entre humano e agente: objetivo, problema, usuários-alvo, contexto de uso, entradas/saídas, limites, critérios de aceitação, riscos, evidências necessárias.
-- `docs/mentorship-pack.md` — como "eu" (o desenvolvedor, apoiado por Copilot) devo trabalhar: julgamento, padrões de arquitetura, padrões de código, estilo de documentação, qualidade mínima aceitável, exemplos de boas/más decisões.
+- `docs/mentorship-pack.md` — como "eu" (o desenvolvedor, apoiado pelo Claude Code) devo trabalhar: julgamento, padrões de arquitetura, padrões de código, estilo de documentação, qualidade mínima aceitável, exemplos de boas/más decisões.
 - `docs/workflow-runbook.md` — processo obrigatório de execução, etapa a etapa, cada etapa gerando pelo menos um commit com racionalidade registrada.
 - `solutions/solution-a`, `solution-b`, `solution-c` — três abordagens diferentes para o mesmo problema (ver seção 8).
 - `docs/adr/001-escolha-da-solucao.md` — decisão registrada: qual solução venceu e por quê.
