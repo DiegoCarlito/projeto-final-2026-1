@@ -2,7 +2,7 @@
 
 ## Cabeçalho
 
-- **Link da aplicação:** _[PENDENTE — preencher com o link de deploy público. Localmente: `GEMINI_API_KEY=... docker compose up --build` e acessar `http://localhost:8000/`]_
+- **Link da aplicação:** https://churn-solution-c.onrender.com/ (Render, free tier — pode levar até ~1min para "acordar" após um período sem uso). Documentação interativa da API: https://churn-solution-c.onrender.com/docs
 - **Link do repositório:** https://github.com/DiegoCarlito/projeto-final-2026-1
 - **Aluno(a):** Diego Carlito Rodrigues de Souza
 
@@ -84,6 +84,18 @@ volume montado em runtime. `docker-compose.yml` sobe tudo com um comando
 e responde em modo de fallback. O mesmo processo FastAPI expõe a API (`/api/v1/predict`) e
 o painel estático (`/`, via `StaticFiles`) — um único serviço, uma única porta.
 
+**Deploy público:** Render (free tier). Como o dataset não pode ser baixado por uma
+plataforma de CI/build externa (mesma restrição de licença), o caminho até o deploy
+público é diferente do local: a imagem é **buildada localmente** (onde o CSV existe),
+publicada no GitHub Container Registry (`ghcr.io/diegocarlito/churn-solution-c`) e o
+Render só faz *pull* dessa imagem já pronta — não tenta clonar o repositório nem treinar
+nada. A porta é lida da variável `PORT` injetada pelo Render (`agent_c.py`/`app.py` não
+mudam; só o `CMD` do Dockerfile de deploy usa `${PORT:-8000}` em vez de uma porta fixa).
+Validado com chamadas reais pós-deploy: guardrail de entrada (HTTP 422 para categoria fora
+de escopo), resposta com LLM real (`llm_executed: true`) e fallback genuíno em outra
+chamada da mesma bateria — mesma variabilidade de latência já documentada localmente.
+Detalhes em `docs/evidence/11-deploy-render.md`.
+
 **CI/CD:** não há pipeline de integração contínua configurado nesta entrega (ex: GitHub
 Actions rodando os testes a cada push) — os 27 testes automatizados rodam localmente via
 `pytest`. Registrado como próximo passo na seção de Reflexão.
@@ -164,7 +176,7 @@ amigável, nunca um stack trace — testado manualmente com Playwright
 
 ## Demonstração
 
-_[PENDENTE — link do vídeo. Roteiro sugerido: (1) `GEMINI_API_KEY=... docker compose up --build` a partir de um clone limpo; (2) abrir `http://localhost:8000/`, preencher um cliente de alto risco (contrato mensal, fibra óptica, tenure baixo) e mostrar a explicação real do Gemini 2.5 Flash; (3) preencher um cliente de zona cinzenta (ex: os valores em `docs/evidence/04-solution-c-validacao.md` §3) e mostrar a ação exploratória leve; (4) mostrar `docs/evidence/04-solution-c-validacao.md` §4 como prova do fallback ativado por uma falha real da API; (5) tentar um payload com categoria fora de escopo (`Contract` inválido) e mostrar o HTTP 422.]_
+_[PENDENTE — link do vídeo. Roteiro sugerido, agora usando a aplicação já no ar: (1) abrir https://churn-solution-c.onrender.com/ (avisar que o free tier pode levar ~1min pra acordar) e mostrar o formulário; (2) preencher um cliente de alto risco (contrato mensal, fibra óptica, tenure baixo) e mostrar a explicação real do Gemini 2.5 Flash; (3) preencher um cliente de zona cinzenta (ex: os valores em `docs/evidence/04-solution-c-validacao.md` §3) e mostrar a ação exploratória leve; (4) tentar um payload com categoria fora de escopo (`Contract` inválido, testável em `/docs`) e mostrar o HTTP 422; (5) opcional: mostrar `docs/evidence/04-solution-c-validacao.md` §4 e `docs/evidence/11-deploy-render.md` como prova de fallback ativado por falhas reais da API, tanto local quanto em produção.]_
 
 ---
 

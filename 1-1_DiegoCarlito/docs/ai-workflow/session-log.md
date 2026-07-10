@@ -116,7 +116,13 @@ O uso do GitHub Copilot e do chat do Gemini Pro para desenvolvimento foi descont
 
 ---
 
+21. **Deploy público (`report.md` §Cabeçalho e §Deployment):** Hugging Face Spaces descartado — o usuário confirmou que o SDK Docker exige pagamento na conta usada, ao contrário do que a documentação sugeria (não insisti nisso; busquei confirmação externa, os resultados foram inconsistentes, e priorizei a experiência direta do usuário sobre a busca). Optado por Render: como o dataset não pode ser baixado por uma plataforma de build externa (mesma restrição de licença), o caminho foi build local da imagem (com o modelo já treinado, sem CSV) → push para `ghcr.io/diegocarlito/churn-solution-c` → Render só puxa a imagem pronta. Dockerfile de deploy ajustado para ler a porta de `${PORT:-8000}` (Render injeta via env var). Aplicação no ar em https://churn-solution-c.onrender.com/, validada com chamadas reais pós-deploy: guardrail de entrada (422), sucesso com LLM real e fallback genuíno na mesma bateria de testes. Evidência em `docs/evidence/11-deploy-render.md`.
+
+*Nota sobre credenciais:* o usuário colou um token do GitHub (`write:packages`) diretamente na conversa para o push da imagem. Usado imediatamente, `docker logout` executado logo depois para não deixar a credencial persistida localmente, e o usuário foi orientado a revogar o token no GitHub após o uso.
+
+---
+
 ### 3. Planejamento para a Próxima Sessão
 
-- Preencher os dois placeholders do `report.md`: link de deploy público (se houver) e vídeo de demonstração.
+- Preencher o último placeholder do `report.md`: vídeo de demonstração (roteiro sugerido já atualizado para usar a URL pública).
 - Considerar CI (GitHub Actions rodando pytest) — registrado como próximo passo no `report.md`, não bloqueante para a entrega.
