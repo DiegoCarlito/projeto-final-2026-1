@@ -82,7 +82,14 @@ O uso do GitHub Copilot e do chat do Gemini Pro para desenvolvimento foi descont
 
 ---
 
+8. **Desenvolvimento da Solution C (Etapa 4):** implementado o pipeline multi-etapa completo — `guardrails.py` (Pydantic com `Literal` nos campos categóricos, rejeitando valores fora de escopo que A/B deixavam passar silenciosamente; `is_valid_llm_output` como guardrail de saída), `fallback.py` (degradação graciosa por zona de confiança), `agent_c.py` (orquestra: prevê → classifica zona de confiança → SHAP → LLM com timeout → guardrail de saída → fallback), reaproveitando `model_wrapper.py`/`shap_tool.py` da Solution B. Treinado e validado ponta a ponta: zona cinzenta (0.45–0.55) testada com sucesso via LLM real; escalonamento de alto risco (>95% + fatura alta) verificado diretamente na lógica de decisão, já que o dataset real não atinge essa faixa de probabilidade; guardrails de entrada testados (campo faltando e categoria fora de escopo, ambos HTTP 422). Evidências em `docs/evidence/solution-c-validacao-09-07.md`.
+9. **Achado real durante a validação:** o timeout inicial sugerido no README da Solution C (2.0s) estourava quase sempre contra a latência real do Gemini 2.5 Flash; ajustado para 8.0s com base em medição empírica. Mesmo assim, duas chamadas reais retornaram `DeadlineExceeded` (504 do lado do Google, não do timeout do cliente) — o fallback determinístico assumiu corretamente nas duas vezes, sem expor erro técnico ao usuário. Evidência genuína (não simulada) do risco "Latência alta / Falha na API do LLM" do `mission-brief.md` §8 sendo mitigado na prática.
+10. **Workflow Runbook:** Etapa 4 concluída — as três soluções (A, B, C) têm protótipo mínimo implementado e validado localmente.
+
+---
+
 ### 3. Planejamento para a Próxima Sessão
 
-- Iniciar a Solution C (Etapa 4): pipeline com guardrails de entrada (Pydantic), reutilização do modelo+SHAP da Solution B, tratamento da "zona cinzenta" (0.45–0.55) e fallback explícito.
-- Começar a Etapa 5 (testes automatizados em `tests/` para as três soluções) depois que a Solution C estiver pronta.
+- Etapa 5 do runbook: testes automatizados em `tests/` para as três soluções (guardrails, fallback simulado, zona cinzenta, escalonamento), cobrindo o que hoje só foi validado manualmente.
+- Etapa 6: comparar as três soluções (custo, complexidade, qualidade da explicação, riscos, manutenibilidade) e preencher a tabela do runbook.
+- Etapa 7 e 8: escolher a solução final e registrar o ADR.

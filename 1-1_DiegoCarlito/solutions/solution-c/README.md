@@ -40,7 +40,7 @@ solutions/solution-c/
 2. O modelo tabular processa a probabilidade.
 3. O sistema avalia se a probabilidade está na **Zona Cinzenta (45% - 55%)**. Se sim, anexa uma flag de incerteza.
 4. A ferramenta SHAP calcula as variáveis determinantes.
-5. O agente tenta invocar o LLM para humanizar o relatório com um timeout agressivo (ex: 2.0s).
+5. O agente tenta invocar o LLM para humanizar o relatório com um timeout agressivo (8.0s — valor medido empiricamente contra a latência real do Gemini 2.5 Flash, ver `docs/evidence/`).
 6. **Cenário de Sucesso (LLM Online):** O LLM responde, o **Guardrail de Saída** valida a estrutura do JSON e o entrega ao utilizador.
 7. **Cenário de Contingência (LLM Offline/Timeout):** O módulo `fallback.py` captura a exceção, consome a saída bruta do SHAP e monta as justificações através de mapeamentos de texto locais pré-determinados, entregando a resposta no formato esperado sem que o utilizador note a falha de terceiros.
 
