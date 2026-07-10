@@ -21,8 +21,7 @@ models/*.bin
 *.env.local
 
 # Editor
-.vscode/*
-!.vscode/extensions.json
+.vscode/
 
 # Docker
 docker/*.log

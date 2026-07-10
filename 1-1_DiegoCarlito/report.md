@@ -28,8 +28,8 @@ ia cancelar — falso negativo).
 
 **Métrica técnica:** o dataset é desbalanceado (a maioria dos clientes não cancela), então
 acurácia sozinha esconde o problema real. A solução final usa **recall, precisão, F1 e
-ROC-AUC** na classe Churn — recall de 0.78 e ROC-AUC de 0.8388 (ver `docs/evidence/solution-b-validacao-09-07.md`
-e `docs/evidence/solution-c-validacao-09-07.md`), priorizando não deixar passar clientes
+ROC-AUC** na classe Churn — recall de 0.78 e ROC-AUC de 0.8388 (ver `docs/evidence/04-solution-b-validacao.md`
+e `docs/evidence/04-solution-c-validacao.md`), priorizando não deixar passar clientes
 em risco real, mesmo ao custo de mais falsos positivos.
 
 ---
@@ -95,7 +95,7 @@ específico por zona de confiança garante que o usuário sempre recebe uma resp
 nunca um erro técnico cru. Essa estratégia foi validada não só em teoria, mas contra uma
 falha **real** da API do Gemini durante esta sessão (`DeadlineExceeded`, 504 do lado do
 Google) — o fallback assumiu corretamente, dentro e fora do container Docker
-(`docs/evidence/solution-c-validacao-09-07.md`, `docs/evidence/etapa10-docker-painel-09-07.md`).
+(`docs/evidence/04-solution-c-validacao.md`, `docs/evidence/10-docker-painel.md`).
 
 ---
 
@@ -139,7 +139,7 @@ custo de uma oferta de retenção desnecessária (falso positivo).
 
 **Testes automatizados:** 27 testes (pytest), 0 falhas — guardrails de entrada/saída,
 fluxo de sucesso com LLM, fallback, zona cinzenta e escalonamento
-(`docs/evidence/etapa5-testes-automatizados-09-07.md`).
+(`docs/evidence/05-testes-automatizados.md`).
 
 **Latência observada:** uma chamada simples ao Gemini 2.5 Flash leva ~1.5s; com o prompt
 completo (dados do cliente + fatores SHAP + geração de JSON), a latência varia o
@@ -158,13 +158,13 @@ de execução do LLM (deixa claro para quem usa se a explicação veio do Gemini
 fallback), fatores de risco em lista e ação recomendada destacada. Erros (guardrail de
 entrada, serviço indisponível, falha de conexão) sempre mostram uma mensagem em português
 amigável, nunca um stack trace — testado manualmente com Playwright
-(`docs/evidence/etapa10-docker-painel-09-07.md`).
+(`docs/evidence/10-docker-painel.md`).
 
 ---
 
 ## Demonstração
 
-_[PENDENTE — link do vídeo. Roteiro sugerido: (1) `GEMINI_API_KEY=... docker compose up --build` a partir de um clone limpo; (2) abrir `http://localhost:8000/`, preencher um cliente de alto risco (contrato mensal, fibra óptica, tenure baixo) e mostrar a explicação real do Gemini 2.5 Flash; (3) preencher um cliente de zona cinzenta (ex: os valores em `docs/evidence/solution-c-validacao-09-07.md` §3) e mostrar a ação exploratória leve; (4) mostrar `docs/evidence/solution-c-validacao-09-07.md` §4 como prova do fallback ativado por uma falha real da API; (5) tentar um payload com categoria fora de escopo (`Contract` inválido) e mostrar o HTTP 422.]_
+_[PENDENTE — link do vídeo. Roteiro sugerido: (1) `GEMINI_API_KEY=... docker compose up --build` a partir de um clone limpo; (2) abrir `http://localhost:8000/`, preencher um cliente de alto risco (contrato mensal, fibra óptica, tenure baixo) e mostrar a explicação real do Gemini 2.5 Flash; (3) preencher um cliente de zona cinzenta (ex: os valores em `docs/evidence/04-solution-c-validacao.md` §3) e mostrar a ação exploratória leve; (4) mostrar `docs/evidence/04-solution-c-validacao.md` §4 como prova do fallback ativado por uma falha real da API; (5) tentar um payload com categoria fora de escopo (`Contract` inválido) e mostrar o HTTP 422.]_
 
 ---
 

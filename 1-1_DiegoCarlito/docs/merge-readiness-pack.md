@@ -46,14 +46,14 @@ da Solution B.
 ## 3. Testes executados
 
 27 testes automatizados (pytest), 0 falhas. Detalhamento completo em
-`docs/evidence/etapa5-testes-automatizados-09-07.md`.
+`docs/evidence/05-testes-automatizados.md`.
 
 | Teste | Descrição | Resultado |
 |-------|-----------|-----------|
 | `solution-a/tests/test_solution_a.py` (4 testes) | Guardrail de entrada (campo faltando, tipo inválido), sucesso com LLM mockado, fallback sem vazar erro cru | Passou |
 | `solution-b/tests/test_solution_b.py` (5 testes) | Os mesmos 4 casos de A + cobertura direta do `ShapExplainer` (fatores ordenados por impacto) | Passou |
 | `solution-c/tests/test_solution_c.py` (18 testes) | Guardrail de entrada (incl. categoria fora de escopo), guardrail de saída (JSON malformado → fallback), zona cinzenta, escalonamento de alto risco (probabilidade sozinha não basta; escalonamento sobrepõe o LLM), fallback por zona | Passou |
-| Validação manual ponta a ponta (as 3 soluções) | Treino real, servidor local, chamada real ao Gemini 2.5 Flash, guardrail de entrada via HTTP | Passou — `docs/evidence/solution-{a,b,c}-validacao-09-07.md` |
+| Validação manual ponta a ponta (as 3 soluções) | Treino real, servidor local, chamada real ao Gemini 2.5 Flash, guardrail de entrada via HTTP | Passou — `docs/evidence/04-solution-a-validacao.md`, `04-solution-b-validacao.md`, `04-solution-c-validacao.md` |
 
 ---
 
@@ -61,10 +61,10 @@ da Solution B.
 
 Em `docs/evidence/`:
 
-- `solution-a-validacao-09-07.md` — treino, servidor local, request/response real (LLM real, não fallback), guardrail de entrada.
-- `solution-b-validacao-09-07.md` — idem, com explicação SHAP local real e comparação com A.
-- `solution-c-validacao-09-07.md` — idem, incluindo um `DeadlineExceeded` **real** (504 do lado do Google) que acionou o fallback corretamente duas vezes, zona cinzenta validada com cliente real do dataset, e verificação direta da lógica de escalonamento (o dataset não atinge probabilidade > 95% com o modelo treinado).
-- `etapa5-testes-automatizados-09-07.md` — saída completa dos 27 testes automatizados.
+- `04-solution-a-validacao.md` — treino, servidor local, request/response real (LLM real, não fallback), guardrail de entrada.
+- `04-solution-b-validacao.md` — idem, com explicação SHAP local real e comparação com A.
+- `04-solution-c-validacao.md` — idem, incluindo um `DeadlineExceeded` **real** (504 do lado do Google) que acionou o fallback corretamente duas vezes, zona cinzenta validada com cliente real do dataset, e verificação direta da lógica de escalonamento (o dataset não atinge probabilidade > 95% com o modelo treinado).
+- `05-testes-automatizados.md` — saída completa dos 27 testes automatizados.
 
 ---
 
@@ -110,7 +110,7 @@ GEMINI_API_KEY=sua_chave_aqui docker compose up --build
 
 Testado nesta sessão: build limpo, subida com chave real (LLM executando de verdade) e
 subida sem chave (fallback ativado automaticamente, sem crash) — ver
-`docs/evidence/etapa10-docker-painel-09-07.md`.
+`docs/evidence/10-docker-painel.md`.
 
 ### Local, sem Docker (desenvolvimento)
 

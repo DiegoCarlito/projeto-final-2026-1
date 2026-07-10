@@ -51,7 +51,7 @@ Modelo salvo em src/model.joblib
 #13 DONE 2.4s
 ```
 
-Métricas idênticas às obtidas localmente (`docs/evidence/solution-c-validacao-09-07.md`) —
+Métricas idênticas às obtidas localmente (`docs/evidence/04-solution-c-validacao.md`) —
 confirma que o ambiente containerizado reproduz o treino sem diferenças.
 
 ### Subida com chave real (comando único, documentado no README.md)

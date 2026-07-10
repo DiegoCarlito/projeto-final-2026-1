@@ -66,6 +66,8 @@ Este é o processo auditável que quero aplicar, com os artefatos abaixo. **Sua 
 ├── agent.md
 ├── README.md
 ├── report.md
+├── docker-compose.yml
+├── .dockerignore
 ├── docs/
 │   ├── mission-brief.md
 │   ├── mentorship-pack.md
@@ -78,21 +80,19 @@ Este é o processo auditável que quero aplicar, com os artefatos abaixo. **Sua 
 │       ├── project-context.md
 │       └── session-log.md
 ├── solutions/
-│   ├── solution-a/
-│   ├── solution-b/
-│   └── solution-c/
-├── src/
-│   ├── model/       # treino e artefato do modelo
-│   ├── agent/        # wrapper de raciocínio/explicação
-│   └── api/          # FastAPI
-├── tests/
+│   ├── solution-a/     # baseline — Regressão Logística + LLM formatador
+│   ├── solution-b/      # Random Forest + SHAP local
+│   └── solution-c/      # solução final (ADR-001) — B + guardrails/fallback/painel
 ├── data/
-│   └── DATA_CARD.md
-├── docker/
-│   └── Dockerfile
-└── .vscode/
-    └── extensions.json
+│   └── DATA_CARD.md    # dataset bruto não versionado (licença Kaggle)
+└── docker/
+    └── Dockerfile
 ```
+
+Cada solução em `solutions/solution-*/` é autocontida: tem seu próprio `src/`, `tests/`,
+`requirements.txt` e `.env.example` — não existe mais um `src/` ou `tests/` únicos na raiz
+(a estrutura original previa isso, mas o projeto evoluiu para as três soluções em paralelo
+e essas pastas nunca chegaram a ser usadas; removidas em 09/07/2026, ver session-log).
 
 Sempre que eu pedir para gerar um arquivo, use exatamente este caminho — não invente uma estrutura alternativa nem sugira renomear pastas sem eu pedir.
 

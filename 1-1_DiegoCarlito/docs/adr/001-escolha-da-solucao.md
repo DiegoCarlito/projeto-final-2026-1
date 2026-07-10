@@ -20,7 +20,7 @@ usuário, e latência sob controle. Essa exigência pesa diretamente nesta decis
 
 As três soluções foram implementadas, treinadas e validadas com chamadas reais à API do
 Gemini 2.5 Flash (não simuladas) nesta sessão (09/07/2026), com evidências em
-`docs/evidence/`, e cobertas por 27 testes automatizados (`docs/evidence/etapa5-testes-automatizados-09-07.md`).
+`docs/evidence/`, e cobertas por 27 testes automatizados (`docs/evidence/05-testes-automatizados.md`).
 
 ---
 
@@ -32,7 +32,7 @@ Gemini 2.5 Flash (não simuladas) nesta sessão (09/07/2026), com evidências em
 - **Prós:** menor superfície de código (4 arquivos, 4 testes), mais rápida de entender e
   de treinar, latência de inferência do modelo tabular desprezível.
 - **Contras:** recall de apenas **0.52** na classe Churn (acurácia 0.7875, ROC-AUC 0.8319 —
-  `docs/evidence/solution-a-validacao-09-07.md`) — deixa passar quase metade dos clientes
+  `docs/evidence/04-solution-a-validacao.md`) — deixa passar quase metade dos clientes
   que de fato cancelam. Explicação baseada em coeficientes globais, não no cliente
   específico — risco de o LLM generalizar demais. Sem guardrail de saída: uma resposta
   malformada do LLM não é detectada antes de chegar ao usuário. Guardrail de entrada aceita
@@ -43,7 +43,7 @@ Gemini 2.5 Flash (não simuladas) nesta sessão (09/07/2026), com evidências em
   ferramenta que o agente consulta para obter a contribuição matemática real (SHAP) de
   cada variável no score **daquele cliente específico**, antes de acionar o LLM.
 - **Prós:** recall de **0.78** na classe Churn (ROC-AUC 0.8388 —
-  `docs/evidence/solution-b-validacao-09-07.md`), bem acima de A. Explicação ancorada em
+  `docs/evidence/04-solution-b-validacao.md`), bem acima de A. Explicação ancorada em
   evidência matemática local, reduzindo alucinação. Boa separação de responsabilidades
   (`model_wrapper.py` / `shap_tool.py` / `agent_b.py`).
 - **Contras:** mesma ausência de guardrail de saída e de guardrail de entrada estrito que
@@ -59,7 +59,7 @@ Gemini 2.5 Flash (não simuladas) nesta sessão (09/07/2026), com evidências em
 - **Prós:** é a única que implementa a régua "Reliable" por completo. Validada com uma
   falha **real** (não simulada) da API do Gemini durante esta sessão — `DeadlineExceeded`
   genuíno, tratado sem expor erro técnico ao usuário
-  (`docs/evidence/solution-c-validacao-09-07.md`). Maior cobertura de testes das três (18,
+  (`docs/evidence/04-solution-c-validacao.md`). Maior cobertura de testes das três (18,
   incluindo guardrail de saída, zona cinzenta e escalonamento). Não perde nenhuma
   capacidade de A/B — mesma qualidade de modelo e de explicação da B.
 - **Contras:** maior superfície de código (7 arquivos) e mais conceitos para quem for dar
@@ -103,10 +103,10 @@ risco de regressão silenciosa ao evoluir o código daqui para frente.
 
 ## Referências
 
-- `docs/evidence/solution-a-validacao-09-07.md`
-- `docs/evidence/solution-b-validacao-09-07.md`
-- `docs/evidence/solution-c-validacao-09-07.md`
-- `docs/evidence/etapa5-testes-automatizados-09-07.md`
+- `docs/evidence/04-solution-a-validacao.md`
+- `docs/evidence/04-solution-b-validacao.md`
+- `docs/evidence/04-solution-c-validacao.md`
+- `docs/evidence/05-testes-automatizados.md`
 - `docs/mission-brief.md` §7 (critérios de aceitação) e §8 (riscos)
 - `agent.md` §7 (política de erro) e §10 (escalonamento humano)
 - `docs/ai-workflow/project-context.md` §3 (régua de saída do curso)

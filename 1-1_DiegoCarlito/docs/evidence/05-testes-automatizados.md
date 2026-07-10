@@ -69,7 +69,7 @@ cd solutions/solution-c && python -m pytest tests/ -v
 ## O que ficou fora desta rodada
 
 - Teste de timeout real (o `DeadlineExceeded` documentado em
-  `docs/evidence/solution-c-validacao-09-07.md` foi genuíno, não simulado em teste
+  `docs/evidence/04-solution-c-validacao.md` foi genuíno, não simulado em teste
   automatizado) — simular um timeout de rede de forma determinística exigiria mockar a
   camada de transporte gRPC do SDK do Gemini, não coberto nesta rodada por custo/benefício
   baixo frente ao já validado manualmente.
