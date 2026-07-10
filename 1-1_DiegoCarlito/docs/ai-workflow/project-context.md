@@ -7,7 +7,7 @@ Projeto Final de uma disciplina de sistemas com agentes de IA. Ciclo completo ex
 - **Trilha escolhida:** 1.1 — Previsão de Churn
 - **Prazo de entrega:** 13/07/2026
 - **Modalidade:** individual
-- **Ferramentas:** GitHub Copilot Free (código dentro do VS Code) + Gemini Pro (especificação, arquitetura, documentação, revisão)
+- **Ferramentas:** Claude Code — única ferramenta de IA de desenvolvimento do projeto (especificação, arquitetura, geração de código, testes, execução e revisão). GitHub Copilot e o uso de chat do Gemini para desenvolvimento foram descontinuados. Não confundir com o Gemini 2.5 Flash: esse é usado via API pelo *produto* em runtime, não como ferramenta de desenvolvimento (ver seção 6).
 
 ## 2. O problema (Trilha 1.1)
 
@@ -47,7 +47,7 @@ O sistema final precisa ser:
 
 ## 4. Framework de processo que vou seguir (Spec-Driven Development / Engenharia de Software Agêntica)
 
-Este é o processo auditável que quero aplicar, com os artefatos abaixo. **Sua função é me ajudar a preencher e revisar cada um destes documentos antes de eu escrever qualquer código.**
+Este é o processo auditável que quero aplicar, com os artefatos abaixo. **Sua função é me ajudar a preencher e revisar cada um destes documentos antes de qualquer código ser escrito.**
 
 - `agent.md` — como o agente (o sistema de churn) deve se comportar: papel, tom, ferramentas, restrições, formato de saída, critérios de parada, política de erro, como registrar decisões, como lidar com incerteza, quando escalar para humano.
 - `docs/mission-brief.md` — contrato entre humano e agente: objetivo, problema, usuários-alvo, contexto de uso, entradas/saídas, limites, critérios de aceitação, riscos, evidências necessárias.
@@ -62,6 +62,7 @@ Este é o processo auditável que quero aplicar, com os artefatos abaixo. **Sua 
 
 ```
 1-1_DiegoCarlito/
+├── CLAUDE.md
 ├── agent.md
 ├── README.md
 ├── report.md
@@ -75,7 +76,7 @@ Este é o processo auditável que quero aplicar, com os artefatos abaixo. **Sua 
 │   ├── evidence/
 │   └── ai-workflow/
 │       ├── project-context.md
-│       └── gemini-system-instructions.md
+│       └── session-log.md
 ├── solutions/
 │   ├── solution-a/
 │   ├── solution-b/
@@ -90,7 +91,6 @@ Este é o processo auditável que quero aplicar, com os artefatos abaixo. **Sua 
 ├── docker/
 │   └── Dockerfile
 └── .vscode/
-    ├── settings.json
     └── extensions.json
 ```
 
@@ -101,6 +101,7 @@ Sempre que eu pedir para gerar um arquivo, use exatamente este caminho — não 
 - **Linguagem:** Python 3.11+
 - **Modelo:** scikit-learn (regressão logística / RandomForest) ou XGBoost — escolher um e manter nas três soluções, salvo justificativa registrada em ADR
 - **Explicabilidade:** SHAP (ou `feature_importances_` do modelo, se SHAP for pesado demais para o prazo)
+- **LLM do produto (respostas do agente):** Gemini 2.5 Flash via API `google-generativeai` — fixo para as três soluções. É o modelo que o agente chama em runtime para gerar a explicação final ao usuário; não é a ferramenta de desenvolvimento (essa é o Claude Code, ver `CLAUDE.md` na raiz). Não trocar sem decisão registrada em ADR.
 - **API:** FastAPI + Uvicorn
 - **Validação de entrada:** Pydantic
 - **Testes:** pytest
@@ -142,6 +143,6 @@ Comparar as três em: custo, complexidade, qualidade da explicação, riscos, ma
 
 Cabeçalho (link da app, link do repo) → Definição do problema (dor, stakeholders, métrica de negócio e técnica) → Como o sistema é montado (diagrama de arquitetura, exploração de agente/modelo, deployment, CI/CD) → Descrição do agente (modelo/ferramentas, dados/contexto, guardrails, iterações de prompt) → Avaliação do sistema (performance, UX) → Demonstração (vídeo) → Reflexão (o que funcionou/não funcionou, próximos passos) → Impactos e ética (viés entre grupos, privacidade) → Referências.
 
-## 10. Seu papel neste chat
+## 10. Seu papel (Claude Code)
 
-Use as instruções de sistema que já configurei separadamente (persona de Mentor de Arquitetura). Sempre que eu colar um artefato parcialmente preenchido, revise contra os requisitos acima antes de aprovar. Sempre que eu pedir para "avançar de etapa", confirme que a etapa anterior está completa primeiro.
+As instruções de persona e de operação ficam no `CLAUDE.md` da raiz do repositório — carregado automaticamente pelo Claude Code em toda sessão, sem precisar colar nada. Este documento é a referência de contexto que o `CLAUDE.md` aponta para decisões de arquitetura, stack e estrutura. Sempre que eu pedir para revisar um artefato parcialmente preenchido, avalie contra os requisitos acima antes de aprovar. Sempre que eu pedir para "avançar de etapa", confirme que a etapa anterior está completa primeiro.

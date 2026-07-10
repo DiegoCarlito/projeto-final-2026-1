@@ -51,3 +51,19 @@ Os seguintes marcos técnicos e documentais foram concluídos:
 
 - **Validação Prática da Solution A:** Garantir a obtenção do dataset, executar o script de treinamento, subir o servidor local e testar o endpoint de predição via Swagger/Postman para validar o retorno do JSON com a explicação do LLM.
 - **Desenvolvimento da Solution B (Etapa 4):** Iniciar o código do modelo preditivo avançado (Random Forest) e implementar a ferramenta de explicabilidade local (SHAP Tool) para que o Agente justifique o risco com pesos matemáticos exatos para cada cliente.
+
+## Sessão 3 (09/07/2026)
+
+> Consolidação do fluxo de desenvolvimento em uma única ferramenta agêntica (Claude Code)
+
+---
+
+### 1. Atividades Realizadas
+
+O uso do GitHub Copilot e do chat do Gemini Pro para desenvolvimento foi descontinuado. O Claude Code passa a ser a única ferramenta de IA de desenvolvimento do projeto, cobrindo especificação, geração de código, testes, execução e revisão — diferença chave em relação ao fluxo anterior, em que nenhuma IA de fato executava comandos no ambiente.
+
+1. **Criação de `CLAUDE.md` na raiz do repositório:** substitui `docs/ai-workflow/gemini-system-instructions.md` (removido) e `.github/copilot-instructions.md` (removido). É carregado automaticamente pelo Claude Code em toda sessão, eliminando a necessidade de colar instruções de sistema manualmente. Documenta o papel do Claude Code, as regras operacionais (stack fixa, Clean Code, runbook sequencial, sinalização de commits) e, com destaque, a regra de arquitetura que separa a ferramenta de desenvolvimento (Claude Code) do modelo usado em runtime pelo produto (Gemini 2.5 Flash via API).
+2. **Atualização de `docs/ai-workflow/project-context.md`:** seção 1 (ferramentas) e seção 10 (papel da IA) revisadas para refletir o Claude Code; seção 6 (stack técnica) passou a listar explicitamente o Gemini 2.5 Flash como dependência de runtime do agente, evitando confusão futura com a ferramenta de desenvolvimento; árvore de pastas (seção 5) atualizada.
+3. **Limpeza de configuração do Copilot:** removidas as referências a `github.copilot*` de `.vscode/settings.json` e `.vscode/extensions.json`.
+
+*Nota: nenhuma regra de arquitetura do produto (modelo tabular, SHAP, Gemini 2.5 Flash, guardrails, fallback) foi alterada nesta sessão — apenas o fluxo de ferramentas de desenvolvimento.*
