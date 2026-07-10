@@ -92,7 +92,12 @@ O uso do GitHub Copilot e do chat do Gemini Pro para desenvolvimento foi descont
 
 ---
 
+12. **Etapa 6 do runbook — comparação das três soluções:** tabela preenchida em `docs/workflow-runbook.md` (custo, complexidade, qualidade da explicação, riscos, manutenibilidade, adequação ao problema), com base nas métricas reais de treino e nas evidências coletadas nesta e nas sessões anteriores.
+13. **Etapa 7 e 8 — decisão final e ADR:** **Solution C escolhida** para seguir para a integração final. Justificativa registrada em `docs/adr/001-escolha-da-solucao.md`: é a única que atende à régua "Reliable" do curso por completo (guardrails de entrada/saída, fallback validado contra uma falha real de API, zona cinzenta, escalonamento humano), sem sacrificar o recall (0.78) e a explicação SHAP local herdados da Solution B. Limitação registrada explicitamente: o threshold de "fatura alta" para escalonamento (`agent_c.py::HIGH_RISK_MONTHLY_CHARGES_THRESHOLD`) ainda não foi validado com o negócio.
+
+---
+
 ### 3. Planejamento para a Próxima Sessão
 
-- Etapa 6: comparar as três soluções (custo, complexidade, qualidade da explicação, riscos, manutenibilidade) e preencher a tabela do runbook.
-- Etapa 7 e 8: escolher a solução final e registrar o ADR.
+- Etapa 9: preencher `docs/merge-readiness-pack.md` com a comparação final, checklist e instruções de execução.
+- Etapa 10: empacotar a solution-c em Docker, integrar a um produto/painel simples e escrever o `report.md`.
