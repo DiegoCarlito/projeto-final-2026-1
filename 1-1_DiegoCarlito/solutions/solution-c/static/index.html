@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Painel de Retenção — Previsão de Churn</title>
+<link rel="icon" href="data:," />
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #f5f6f8;
+    --card-bg: #ffffff;
+    --text: #1a1d23;
+    --muted: #5b6270;
+    --border: #dde1e7;
+    --accent: #2f6fed;
+    --danger: #c0392b;
+    --warning: #b8860b;
+    --ok: #1f8a4c;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14161a;
+      --card-bg: #1d2026;
+      --text: #eef0f3;
+      --muted: #9aa2b1;
+      --border: #2c3038;
+      --accent: #5b8cf7;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+  }
+  header {
+    padding: 1.5rem 1.5rem 0.5rem;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+  header h1 { font-size: 1.4rem; margin: 0 0 0.15rem; }
+  header p { color: var(--muted); margin: 0; font-size: 0.9rem; }
+  main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 1rem 1.5rem 3rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  @media (min-width: 800px) {
+    main { grid-template-columns: 1fr 1fr; align-items: start; }
+  }
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem;
+  }
+  fieldset {
+    border: none;
+    padding: 0;
+    margin: 0 0 1rem;
+  }
+  legend {
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+  .field-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem 0.8rem;
+  }
+  label {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.8rem;
+    color: var(--muted);
+    gap: 0.25rem;
+  }
+  input, select {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.5rem;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+  }
+  button {
+    margin-top: 0.75rem;
+    width: 100%;
+    padding: 0.65rem;
+    border: none;
+    border-radius: 8px;
+    background: var(--accent);
+    color: white;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  button:disabled { opacity: 0.6; cursor: wait; }
+  .result-placeholder { color: var(--muted); font-size: 0.9rem; }
+  .probability {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin: 0.25rem 0;
+  }
+  .badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-right: 0.4rem;
+  }
+  .badge.zone-standard { background: #dce7fb; color: #1d4ed8; }
+  .badge.zone-gray_zone { background: #fdf1cf; color: var(--warning); }
+  .badge.zone-high_risk_escalation { background: #fbdada; color: var(--danger); }
+  .badge.llm-true { background: #dcf3e3; color: var(--ok); }
+  .badge.llm-false { background: #eee; color: var(--muted); }
+  ul.risk-factors { padding-left: 1.1rem; margin: 0.75rem 0; }
+  ul.risk-factors li { margin-bottom: 0.35rem; }
+  .action-box {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.75rem;
+    margin-top: 0.5rem;
+  }
+  .error-box {
+    background: #fbdada;
+    color: var(--danger);
+    border-radius: 8px;
+    padding: 0.75rem;
+    font-size: 0.9rem;
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Painel de Retenção — Previsão de Churn</h1>
+  <p>Solution C · Random Forest + SHAP local + guardrails + fallback · Gemini 2.5 Flash</p>
+</header>
+<main>
+  <form class="card" id="customer-form">
+    <fieldset>
+      <legend>Perfil</legend>
+      <div class="field-grid">
+        <label>Gênero
+          <select name="gender">
+            <option value="Female">Feminino</option>
+            <option value="Male">Masculino</option>
+          </select>
+        </label>
+        <label>Idoso (65+)
+          <select name="SeniorCitizen">
+            <option value="0">Não</option>
+            <option value="1">Sim</option>
+          </select>
+        </label>
+        <label>Possui parceiro(a)
+          <select name="Partner">
+            <option value="No">Não</option>
+            <option value="Yes">Sim</option>
+          </select>
+        </label>
+        <label>Possui dependentes
+          <select name="Dependents">
+            <option value="No">Não</option>
+            <option value="Yes">Sim</option>
+          </select>
+        </label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Conta</legend>
+      <div class="field-grid">
+        <label>Tempo de contrato (meses)
+          <input type="number" name="tenure" min="0" max="100" value="2" required />
+        </label>
+        <label>Tipo de contrato
+          <select name="Contract">
+            <option value="Month-to-month">Mensal</option>
+            <option value="One year">Anual</option>
+            <option value="Two year">Bianual</option>
+          </select>
+        </label>
+        <label>Fatura sem papel
+          <select name="PaperlessBilling">
+            <option value="No">Não</option>
+            <option value="Yes">Sim</option>
+          </select>
+        </label>
+        <label>Forma de pagamento
+          <select name="PaymentMethod">
+            <option value="Electronic check">Cheque eletrônico</option>
+            <option value="Mailed check">Cheque por correio</option>
+            <option value="Bank transfer (automatic)">Transferência (automática)</option>
+            <option value="Credit card (automatic)">Cartão de crédito (automático)</option>
+          </select>
+        </label>
+        <label>Cobrança mensal (R$)
+          <input type="number" name="MonthlyCharges" min="0" step="0.01" value="95.50" required />
+        </label>
+        <label>Total pago até hoje (R$)
+          <input type="text" name="TotalCharges" value="191.0" required />
+        </label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Serviços</legend>
+      <div class="field-grid">
+        <label>Serviço de telefone
+          <select name="PhoneService">
+            <option value="Yes">Sim</option>
+            <option value="No">Não</option>
+          </select>
+        </label>
+        <label>Múltiplas linhas
+          <select name="MultipleLines">
+            <option value="No">Não</option>
+            <option value="Yes">Sim</option>
+            <option value="No phone service">Sem serviço de telefone</option>
+          </select>
+        </label>
+        <label>Internet
+          <select name="InternetService">
+            <option value="Fiber optic">Fibra óptica</option>
+            <option value="DSL">DSL</option>
+            <option value="No">Não possui</option>
+          </select>
+        </label>
+        <label>Segurança online
+          <select name="OnlineSecurity">
+            <option value="No">Não</option>
+            <option value="Yes">Sim</option>
+            <option value="No internet service">Sem serviço de internet</option>
+          </select>
+        </label>
+        <label>Backup online
+          <select name="OnlineBackup">
+            <option value="No">Não</option>
+            <option value="Yes">Sim</option>
+            <option value="No internet service">Sem serviço de internet</option>
+          </select>
+        </label>
+        <label>Proteção de dispositivo
+          <select name="DeviceProtection">
+            <option value="No">Não</option>
+            <option value="Yes">Sim</option>
+            <option value="No internet service">Sem serviço de internet</option>
+          </select>
+        </label>
+        <label>Suporte técnico
+          <select name="TechSupport">
+            <option value="No">Não</option>
+            <option value="Yes">Sim</option>
+            <option value="No internet service">Sem serviço de internet</option>
+          </select>
+        </label>
+        <label>Streaming de TV
+          <select name="StreamingTV">
+            <option value="No">Não</option>
+            <option value="Yes">Sim</option>
+            <option value="No internet service">Sem serviço de internet</option>
+          </select>
+        </label>
+        <label>Streaming de filmes
+          <select name="StreamingMovies">
+            <option value="No">Não</option>
+            <option value="Yes">Sim</option>
+            <option value="No internet service">Sem serviço de internet</option>
+          </select>
+        </label>
+      </div>
+    </fieldset>
+
+    <button type="submit" id="submit-button">Analisar risco de churn</button>
+  </form>
+
+  <section class="card" id="result-card">
+    <p class="result-placeholder">Preencha o perfil do cliente e clique em "Analisar risco de churn" para ver a previsão e a explicação.</p>
+  </section>
+</main>
+
+<script>
+const form = document.getElementById("customer-form");
+const resultCard = document.getElementById("result-card");
+const submitButton = document.getElementById("submit-button");
+
+const ZONE_LABELS = {
+  standard: "Confiança padrão",
+  gray_zone: "Zona cinzenta (marginal)",
+  high_risk_escalation: "Alto risco — escalonar",
+};
+
+function payloadFromForm(formData) {
+  const payload = Object.fromEntries(formData.entries());
+  payload.SeniorCitizen = Number(payload.SeniorCitizen);
+  payload.tenure = Number(payload.tenure);
+  payload.MonthlyCharges = Number(payload.MonthlyCharges);
+  return payload;
+}
+
+function renderError(message) {
+  resultCard.innerHTML = `<div class="error-box">${message}</div>`;
+}
+
+function renderResult(data) {
+  const probabilityPct = (data.churn_probability * 100).toFixed(1);
+  const zone = data.system_status?.confidence_zone ?? "standard";
+  const llmExecuted = data.system_status?.llm_executed ?? false;
+
+  const riskItems = (data.risk_factors || [])
+    .map((factor) => `<li>${factor}</li>`)
+    .join("");
+
+  resultCard.innerHTML = `
+    <span class="badge zone-${zone}">${ZONE_LABELS[zone] ?? zone}</span>
+    <span class="badge llm-${llmExecuted}">${llmExecuted ? "Explicação gerada por IA" : "Resposta de contingência (fallback)"}</span>
+    <div class="probability">${probabilityPct}%</div>
+    <div style="color: var(--muted); font-size: 0.85rem; margin-bottom: 0.5rem;">probabilidade de churn</div>
+    <ul class="risk-factors">${riskItems}</ul>
+    <div class="action-box">
+      <strong>Ação recomendada:</strong>
+      <p style="margin: 0.35rem 0 0;">${data.recommended_action}</p>
+    </div>
+  `;
+}
+
+form.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  submitButton.disabled = true;
+  submitButton.textContent = "Analisando...";
+  resultCard.innerHTML = `<p class="result-placeholder">Consultando o modelo e o Gemini 2.5 Flash...</p>`;
+
+  try {
+    const payload = payloadFromForm(new FormData(form));
+    const response = await fetch("/api/v1/predict", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    if (response.status === 422) {
+      renderError("Alguns dados do formulário são inválidos. Revise os campos e tente novamente.");
+      return;
+    }
+    if (response.status === 503) {
+      renderError("O serviço de previsão está indisponível no momento. Tente novamente em instantes.");
+      return;
+    }
+    if (!response.ok) {
+      renderError("Não foi possível calcular o risco deste cliente agora. Tente novamente em instantes.");
+      return;
+    }
+
+    renderResult(await response.json());
+  } catch (err) {
+    renderError("Falha de conexão com o servidor de previsão. Verifique sua rede e tente novamente.");
+  } finally {
+    submitButton.disabled = false;
+    submitButton.textContent = "Analisar risco de churn";
+  }
+});
+</script>
+</body>
+</html>

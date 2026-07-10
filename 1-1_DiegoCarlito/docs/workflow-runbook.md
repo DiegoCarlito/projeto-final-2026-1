@@ -53,10 +53,10 @@ Siga as etapas abaixo na ordem indicada. Cada etapa deve gerar pelo menos um com
 - [x] Criar `docs/adr/001-escolha-da-solucao.md`
 
 ### Etapa 9: Gerar o Merge-Readiness Pack
-- [ ] Preencher `docs/merge-readiness-pack.md`
+- [x] Preencher `docs/merge-readiness-pack.md`
 
 ### Etapa 10: Empacotar, integrar ao produto e escrever o relatório
-- [ ] Docker sobe com um comando
-- [ ] API integrada a um produto/painel
-- [ ] `report.md` completo
+- [x] Docker sobe com um comando (`GEMINI_API_KEY=... docker compose up --build`, testado com e sem chave)
+- [x] API integrada a um produto/painel (`solutions/solution-c/static/index.html`, testado com Playwright)
+- [ ] `report.md` completo — escrito por completo, exceto dois pontos que só o aluno pode preencher: link de deploy público e vídeo de demonstração
 - [ ] Verificar que cada etapa tem pelo menos um commit com racionalidade

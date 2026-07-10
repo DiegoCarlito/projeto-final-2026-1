@@ -1,0 +1,22 @@
+# Ambiente e caches locais — nunca precisam entrar no contexto de build
+.venv/
+.git/
+.github/
+**/__pycache__/
+**/.pytest_cache/
+**/.ruff_cache/
+*.pyc
+
+# Segredos — GEMINI_API_KEY é passada em runtime, nunca embutida na imagem
+solutions/*/.env
+
+# Artefato de modelo é gerado dentro da imagem pelo Dockerfile, não copiado do host
+solutions/*/src/model.joblib
+
+# Dados que não devem entrar no build (o CSV usado é copiado explicitamente pelo Dockerfile)
+data/*.zip
+data/raw/
+data/*.parquet
+
+.vscode/*
+docker/*.log

@@ -97,7 +97,19 @@ O uso do GitHub Copilot e do chat do Gemini Pro para desenvolvimento foi descont
 
 ---
 
+14. **Etapa 9 — Merge-Readiness Pack:** `docs/merge-readiness-pack.md` preenchido por completo (comparação final, 27 testes, evidências, limitações, riscos, decisões arquiteturais, instruções de execução, checklist).
+15. **Etapa 10 (parcial) — painel web:** perguntado ao usuário qual abordagem de frontend usar, já que não estava na stack fixada; escolhida a opção sem dependências novas — HTML/JS estático servido pelo próprio FastAPI via `StaticFiles`. Criado `solutions/solution-c/static/index.html` (formulário com os 19 campos do cliente) e montado em `app.py`. Testado de verdade com Playwright + Chromium headless (não só inspecionado): carregamento do formulário e submissão end-to-end com resultado renderizado — capturas em `docs/evidence/screenshots/`.
+16. **Etapa 10 (parcial) — Docker:** `docker/Dockerfile` (Python 3.12 — ajustado depois de o build falhar com 3.11, já que `shap==0.52.0` exige 3.12+), `.dockerignore` e `docker-compose.yml` na raiz. Testado com `docker compose` de verdade: build limpo (métricas de treino idênticas às locais), subida com `GEMINI_API_KEY` real (LLM executando de dentro do container) e subida sem chave (fallback ativado, sem crash) — evidência em `docs/evidence/etapa10-docker-painel-09-07.md`. `README.md` criado na raiz (não existia) com instruções de subida em um comando.
+17. **Workflow Runbook:** Etapa 9 concluída; Etapa 10 com Docker e painel concluídos, falta só `report.md`.
+
+---
+
+18. **Etapa 10 (final) — `report.md`:** escrito por completo seguindo a estrutura exigida (cabeçalho, definição do problema, arquitetura com diagrama textual, descrição do agente com iterações de prompt e o que não funcionou, avaliação com métricas reais das três soluções, reflexão, impactos e ética, referências). Dois pontos deixados como placeholder explícito, pois só o aluno pode preencher: link de deploy público e vídeo de demonstração (com roteiro sugerido já escrito).
+
+---
+
 ### 3. Planejamento para a Próxima Sessão
 
-- Etapa 9: preencher `docs/merge-readiness-pack.md` com a comparação final, checklist e instruções de execução.
-- Etapa 10: empacotar a solution-c em Docker, integrar a um produto/painel simples e escrever o `report.md`.
+- Preencher os dois placeholders do `report.md`: link de deploy público (se houver) e vídeo de demonstração.
+- Conferir a régua de commits (cada etapa do runbook com pelo menos um commit com racionalidade) de ponta a ponta antes da entrega final (prazo 13/07/2026).
+- Considerar CI (GitHub Actions rodando pytest) — registrado como próximo passo no `report.md`, não bloqueante para a entrega.
