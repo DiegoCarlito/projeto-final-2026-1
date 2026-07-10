@@ -25,8 +25,8 @@ Siga as etapas abaixo na ordem indicada. Cada etapa deve gerar pelo menos um com
 - [x] Criar `solutions/solution-c/`
 
 ### Etapa 4: Implementar protótipos mínimos
-- [ ] Implementar protótipo da solution-a
-- [ ] Implementar protótipo da solution-b
+- [x] Implementar protótipo da solution-a
+- [x] Implementar protótipo da solution-b
 - [ ] Implementar protótipo da solution-c
 
 ### Etapa 5: Executar testes
