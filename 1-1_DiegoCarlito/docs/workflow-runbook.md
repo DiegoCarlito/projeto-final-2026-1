@@ -30,9 +30,9 @@ Siga as etapas abaixo na ordem indicada. Cada etapa deve gerar pelo menos um com
 - [x] Implementar protótipo da solution-c
 
 ### Etapa 5: Executar testes
-- [ ] Criar testes em `tests/`
-- [ ] Executar testes para cada solução
-- [ ] Registrar resultados em `docs/evidence/`
+- [x] Criar testes em `tests/`
+- [x] Executar testes para cada solução
+- [x] Registrar resultados em `docs/evidence/`
 
 ### Etapa 6: Comparar as soluções
 

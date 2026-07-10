@@ -88,8 +88,11 @@ O uso do GitHub Copilot e do chat do Gemini Pro para desenvolvimento foi descont
 
 ---
 
+11. **Etapa 5 do runbook — testes automatizados:** criada uma suíte pytest por solução (`solutions/solution-{a,b,c}/tests/`), não no `tests/` da raiz — decisão deliberada, já que cada solução é um app independente com seu próprio `src/` e `model.joblib`; o `tests/` da raiz (vazio, só `.gitkeep`) fica como estava. 27 testes no total (4 + 5 + 18), todos passando, LLM sempre mockado (`monkeypatch`) para a suíte rodar determinística e rapidamente sem depender de rede/API key. Solution C tem a cobertura mais ampla: guardrail de saída, zona cinzenta, escalonamento de alto risco e a rejeição de categoria fora de escopo (`Contract: "Weekly"`) que A/B não pegam. Evidência em `docs/evidence/etapa5-testes-automatizados-09-07.md`.
+
+---
+
 ### 3. Planejamento para a Próxima Sessão
 
-- Etapa 5 do runbook: testes automatizados em `tests/` para as três soluções (guardrails, fallback simulado, zona cinzenta, escalonamento), cobrindo o que hoje só foi validado manualmente.
 - Etapa 6: comparar as três soluções (custo, complexidade, qualidade da explicação, riscos, manutenibilidade) e preencher a tabela do runbook.
 - Etapa 7 e 8: escolher a solução final e registrar o ADR.
