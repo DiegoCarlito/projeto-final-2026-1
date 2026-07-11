@@ -84,3 +84,22 @@ tentativa 3 → llm_executed: True  | zone: gray_zone
   automaticamente a partir do GitHub — qualquer mudança na Solution C exige repetir o
   build + push manualmente. Não configurado CI/CD para isso nesta entrega (mesma
   limitação já registrada no `report.md`, seção CI/CD).
+
+## 6. Rebuild pós-migração para gemini-3.5-flash (11/07/2026)
+
+Essa limitação (imagem não atualiza sozinha) se confirmou na prática: o push do código
+para o GitHub (`docs/adr/002-migracao-gemini-3.5-flash.md`) não bastou — o painel em
+produção continuou mostrando "Gemini 2.5 Flash" mesmo após um redeploy manual no Render,
+porque o Render só faz *pull* da imagem em `ghcr.io/diegocarlito/churn-solution-c:latest`,
+sem rebuildar nada. Repetido o processo da seção 2 (build local + push):
+
+```
+$ docker build -t ghcr.io/diegocarlito/churn-solution-c:latest .
+$ docker push ghcr.io/diegocarlito/churn-solution-c:latest
+latest: digest: sha256:6ce9acafc287fb197adb3c22f07284989723663163c1d5638e1e33ed154d1201
+```
+
+Testado localmente antes do push (`docker run -e PORT=10000 ...`) — painel já mostrando
+"Gemini 3.5 Flash", `GET /` e `GET /docs` retornando `HTTP 200`. Após este push, é
+necessário disparar **"Deploy latest commit"** (ou equivalente) no dashboard do Render —
+um "Redeploy" de um deploy antigo no histórico reutiliza a imagem antiga e não resolve.

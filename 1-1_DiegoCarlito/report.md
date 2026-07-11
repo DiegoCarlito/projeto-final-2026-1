@@ -182,7 +182,7 @@ amigável, nunca um stack trace — testado manualmente com Playwright
 
 ## Demonstração
 
-_[PENDENTE — link do vídeo. Roteiro sugerido, agora usando a aplicação já no ar: (1) abrir https://churn-solution-c.onrender.com/ (avisar que o free tier pode levar ~1min pra acordar) e mostrar o formulário; (2) preencher um cliente de alto risco (contrato mensal, fibra óptica, tenure baixo) e mostrar a explicação real do Gemini 3.5 Flash; (3) preencher um cliente de zona cinzenta (ex: os valores em `docs/evidence/04-solution-c-validacao.md` §3) e mostrar a ação exploratória leve; (4) tentar um payload com categoria fora de escopo (`Contract` inválido, testável em `/docs`) e mostrar o HTTP 422; (5) opcional: mostrar `docs/evidence/04-solution-c-validacao.md` §4 e `docs/evidence/11-deploy-render.md` como prova de fallback ativado por falhas reais da API, tanto local quanto em produção.]_
+**Vídeo:** https://youtu.be/Yp6CuB46nUs
 
 ---
 
