@@ -2,7 +2,7 @@
 
 > **Projeto:** Previsão de Churn
 > **Aluno(a):** Diego Carlito Rodrigues de Souza
-> **Data:** 09/07/2026
+> **Data:** 09/07/2026 (última revisão: 11/07/2026 — migração para gemini-3.5-flash, ver ADR-002)
 
 ---
 
@@ -12,7 +12,7 @@
 para a probabilidade, `ShapExplainer` (SHAP local) para os fatores de risco reais daquele
 cliente, e um agente orquestrador (`agent_c.py`) que classifica a zona de confiança do
 cliente (padrão / zona cinzenta 0.45–0.55 / escalonamento de alto risco), chama o Gemini
-2.5 Flash com timeout para traduzir os fatores SHAP em linguagem de negócio, valida a saída
+3.5 Flash com timeout para traduzir os fatores SHAP em linguagem de negócio, valida a saída
 do LLM (guardrail) e cai em um fallback determinístico específico por zona sempre que
 qualquer etapa falha. Entrada validada por um schema Pydantic estrito (`guardrails.py`)
 que rejeita não só tipos errados, mas também valores categóricos fora do escopo conhecido
@@ -72,10 +72,10 @@ Em `docs/evidence/`:
 
 - O threshold `HIGH_RISK_MONTHLY_CHARGES_THRESHOLD = 100.0` (`solutions/solution-c/src/agent_c.py`) é um valor placeholder para "fatura alta" (agent.md §10), ainda não validado formalmente com o negócio.
 - Nenhum cliente do dataset Telco Customer Churn atinge probabilidade de churn > 95% com o modelo Random Forest treinado nesta sessão (máximo observado: ~0.926) — a regra de escalonamento de alto risco foi validada diretamente na lógica de decisão (testes unitários), não via uma requisição HTTP real com esse desfecho.
-- O timeout do LLM (`LLM_TIMEOUT_SECONDS = 8.0`) foi calibrado empiricamente contra a latência observada nesta sessão; latência da API do Gemini pode variar por região/carga e merece revisão periódica.
+- O timeout do LLM (`LLM_TIMEOUT_SECONDS = 20.0`, ajustado na migração para `gemini-3.5-flash` — ver ADR-002) foi calibrado empiricamente contra a latência observada; latência da API do Gemini pode variar por região/carga/versão do modelo e merece revisão periódica.
 - Testes automatizados mockam o LLM para determinismo; não há um teste automatizado que simule um timeout real de rede (a evidência de timeout real veio de uma falha genuína durante testes manuais, não de um teste de regressão repetível).
 - O painel web (`solutions/solution-c/static/index.html`) é intencionalmente simples (HTML/JS estático, sem framework) — atende ao requisito de produto/interface, mas não é uma UI de produção completa (sem autenticação, sem histórico de consultas).
-- `report.md` ainda não foi preenchido (Etapa 10 do runbook, em andamento).
+- `report.md` completo, incluindo link de deploy público e vídeo de demonstração (Etapa 10 do runbook concluída).
 
 ---
 
@@ -139,7 +139,7 @@ uvicorn src.app:app --port 8000
 - [x] Código funcional em `src/` (de cada solução, em `solutions/solution-*/src/`)
 - [x] Agent.md preenchido
 - [x] Mentorship Pack preenchido
-- [x] Workflow Runbook seguido (Etapas 1–9 concluídas nesta ordem; Etapa 10 em andamento — falta `report.md`)
+- [x] Workflow Runbook seguido (Etapas 1–10 concluídas nesta ordem)
 - [x] Sistema deployable (Docker, roda com um comando — `GEMINI_API_KEY=... docker compose up --build`)
 - [x] Sistema reliable (guardrails e fallback implementados e validados, inclusive contra uma falha real de API)
 
@@ -155,6 +155,9 @@ também sob uma falha real e não planejada da dependência externa mais frágil
 API do LLM), e respondeu exatamente como especificado em `agent.md`: sem expor erro técnico,
 com fallback determinístico. As limitações conhecidas estão documentadas, não escondidas.
 O sistema sobe com um único comando via Docker (build + treino + API + painel), com ou sem
-a chave do Gemini configurada. O que falta para a entrega completa (`report.md`, incluindo
-vídeo de demonstração e link de deploy público) está mapeado na Etapa 10 do
-`workflow-runbook.md` e será concluído antes do prazo final (13/07/2026).
+a chave do Gemini configurada. A entrega está completa: `report.md` preenchido por inteiro
+(link de deploy público, vídeo de demonstração), e a migração não planejada de
+`gemini-2.5-flash` para `gemini-3.5-flash` em produção (`docs/adr/002-migracao-gemini-3.5-flash.md`)
+foi absorvida sem alterar a arquitetura — só ajuste de timeout e de instrução de escala no
+prompt — e validada de ponta a ponta, incluindo rebuild e novo push da imagem para
+`ghcr.io/diegocarlito/churn-solution-c` (`docs/evidence/11-deploy-render.md` §6).

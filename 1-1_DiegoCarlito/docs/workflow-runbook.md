@@ -58,5 +58,5 @@ Siga as etapas abaixo na ordem indicada. Cada etapa deve gerar pelo menos um com
 ### Etapa 10: Empacotar, integrar ao produto e escrever o relatório
 - [x] Docker sobe com um comando (`GEMINI_API_KEY=... docker compose up --build`, testado com e sem chave)
 - [x] API integrada a um produto/painel (`solutions/solution-c/static/index.html`, testado com Playwright)
-- [ ] `report.md` completo — link de deploy público preenchido (https://churn-solution-c.onrender.com/, validado com chamadas reais); falta só o vídeo de demonstração
+- [x] `report.md` completo — link de deploy público (https://churn-solution-c.onrender.com/, validado com chamadas reais) e vídeo de demonstração (https://youtu.be/Yp6CuB46nUs) preenchidos
 - [x] Verificar que cada etapa tem pelo menos um commit com racionalidade — auditoria completa em `docs/ai-workflow/session-log.md` (Sessão 3): todos os 10 itens da tabela têm commit correspondente; commits #1–#4 (04–05/07, anteriores a esta sessão) não têm racionalidade no corpo — aceito como registro histórico, sem reescrita de commits já publicados
