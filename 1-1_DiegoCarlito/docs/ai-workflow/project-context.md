@@ -101,7 +101,7 @@ Sempre que eu pedir para gerar um arquivo, use exatamente este caminho — não 
 - **Linguagem:** Python 3.11+
 - **Modelo:** scikit-learn (regressão logística / RandomForest) ou XGBoost — escolher um e manter nas três soluções, salvo justificativa registrada em ADR
 - **Explicabilidade:** SHAP (ou `feature_importances_` do modelo, se SHAP for pesado demais para o prazo)
-- **LLM do produto (respostas do agente):** Gemini 2.5 Flash via API `google-generativeai` — fixo para as três soluções. É o modelo que o agente chama em runtime para gerar a explicação final ao usuário; não é a ferramenta de desenvolvimento (essa é o Claude Code, ver `CLAUDE.md` na raiz). Não trocar sem decisão registrada em ADR.
+- **LLM do produto (respostas do agente):** Gemini via API `google-generativeai` — fixo para as três soluções. É o modelo que o agente chama em runtime para gerar a explicação final ao usuário; não é a ferramenta de desenvolvimento (essa é o Claude Code, ver `CLAUDE.md` na raiz). Solution C (em produção) usa `gemini-3.5-flash` desde `docs/adr/002-migracao-gemini-3.5-flash.md` (o `gemini-2.5-flash` passou a devolver 404 antes do desligamento anunciado); Solutions A e B permanecem em `gemini-2.5-flash` como registro histórico congelado (ADR-001). Não trocar de versão nem de provedor sem decisão registrada em ADR.
 - **API:** FastAPI + Uvicorn
 - **Validação de entrada:** Pydantic
 - **Testes:** pytest

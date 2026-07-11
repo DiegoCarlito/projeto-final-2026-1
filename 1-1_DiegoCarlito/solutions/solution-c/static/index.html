@@ -145,7 +145,7 @@
 <body>
 <header>
   <h1>Painel de Retenção — Previsão de Churn</h1>
-  <p>Solution C · Random Forest + SHAP local + guardrails + fallback · Gemini 2.5 Flash</p>
+  <p>Solution C · Random Forest + SHAP local + guardrails + fallback · Gemini 3.5 Flash</p>
 </header>
 <main>
   <form class="card" id="customer-form">
@@ -340,7 +340,7 @@ form.addEventListener("submit", async (event) => {
   event.preventDefault();
   submitButton.disabled = true;
   submitButton.textContent = "Analisando...";
-  resultCard.innerHTML = `<p class="result-placeholder">Consultando o modelo e o Gemini 2.5 Flash...</p>`;
+  resultCard.innerHTML = `<p class="result-placeholder">Consultando o modelo e o Gemini 3.5 Flash...</p>`;
 
   try {
     const payload = payloadFromForm(new FormData(form));

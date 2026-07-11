@@ -26,7 +26,7 @@ GEMINI_API_KEY=sua_chave_aqui docker compose up --build
 Painel: **http://localhost:8000/** · Documentação interativa da API: **http://localhost:8000/docs**
 
 Sem `GEMINI_API_KEY`, o sistema ainda sobe e funciona — o agente responde em modo de
-fallback (degradação graciosa), só sem a explicação gerada pelo Gemini 2.5 Flash. A chave é
+fallback (degradação graciosa), só sem a explicação gerada pelo Gemini 3.5 Flash. A chave é
 gratuita em https://aistudio.google.com/.
 
 ## O que é cada coisa

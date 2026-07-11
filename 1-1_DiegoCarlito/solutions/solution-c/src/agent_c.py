@@ -17,12 +17,16 @@ else:
     print("GEMINI_API_KEY não encontrada.")
 
 # Constantes do Agente
-MODEL_NAME = "gemini-2.5-flash"
-# Medido empiricamente: uma chamada simples ao Gemini 2.5 Flash já leva ~1.5s; com o
-# prompt completo (dados do cliente + fatores SHAP + geração de JSON) 2.0s (sugestão
-# inicial do README) estourava quase sempre. 8.0s é "agressivo" o suficiente para não
-# deixar o usuário esperando indefinidamente, mas realista para o caminho de sucesso.
-LLM_TIMEOUT_SECONDS = 8.0
+# gemini-2.5-flash começou a devolver 404 "no longer available" em produção a partir de
+# 09/07/2026, antes da data de desligamento oficial (16/10/2026) — ver ADR-002. Migrado
+# para gemini-3.5-flash, sem data de desligamento anunciada.
+MODEL_NAME = "gemini-3.5-flash"
+# Medido empiricamente com o gemini-3.5-flash (ver ADR-002): uma chamada simples já varia
+# 5.5s-9.7s; com o prompt completo (dados do cliente + fatores SHAP + geração de JSON) a
+# variação foi maior ainda. 8.0s (valor usado com o gemini-2.5-flash) estourava com
+# frequência — 20.0s é folgado o suficiente para o caminho de sucesso sem deixar o
+# usuário esperando indefinidamente em caso de falha real da API.
+LLM_TIMEOUT_SECONDS = 20.0
 
 # Zona cinzenta: probabilidade marginal, sem indícios estatísticos fortes o suficiente
 # para justificar uma oferta agressiva de retenção (agent.md §7 e §9).
@@ -64,10 +68,11 @@ deste cliente, do maior para o menor impacto):
 
 Regras estritas de saída:
 1. Responda APENAS com um objeto JSON válido, sem markdown, sem blocos ```json.
-2. O JSON deve ter exatamente estas chaves: "churn_probability" (float numérico),
-   "risk_factors" (lista de 2 a 3 strings traduzindo os fatores SHAP acima em linguagem de
-   negócio, sem citar "SHAP" ou jargão técnico), "recommended_action" (string com a ação de
-   retenção sugerida).
+2. O JSON deve ter exatamente estas chaves: "churn_probability" (float numérico ENTRE 0 E 1,
+   ex: 0.4606 — a mesma escala decimal informada acima em "PROBABILIDADE CALCULADA DE
+   CHURN", nunca uma porcentagem de 0 a 100), "risk_factors" (lista de 2 a 3 strings
+   traduzindo os fatores SHAP acima em linguagem de negócio, sem citar "SHAP" ou jargão
+   técnico), "recommended_action" (string com a ação de retenção sugerida).
 3. Baseie-se exclusivamente nos fatores SHAP fornecidos — não invente outras causas.
 """
 
@@ -115,7 +120,7 @@ class ChurnAgentC:
     def _try_generate_with_llm(
         self, customer_data: dict, probability: float, top_factors: list[dict], confidence_zone: str
     ) -> dict | None:
-        """Chama o Gemini 2.5 Flash com timeout agressivo. Devolve `None` em qualquer falha
+        """Chama o Gemini 3.5 Flash com timeout agressivo. Devolve `None` em qualquer falha
         (timeout, erro de API, JSON malformado ou reprovado pelo guardrail de saída) — quem
         chama decide o fallback, esta função nunca deixa uma exceção vazar.
         """

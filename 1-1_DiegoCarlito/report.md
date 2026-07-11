@@ -59,7 +59,7 @@ ShapExplainer (shap_tool.py) ──► top 3 fatores de risco REAIS daquele clie
 Agente monta o prompt (probabilidade + fatores SHAP + instrução por zona)
         │
         ▼
-Gemini 2.5 Flash (timeout 8s) ──► JSON com explicação em linguagem de negócio
+Gemini 3.5 Flash (timeout 20s) ──► JSON com explicação em linguagem de negócio
         │
         ├── sucesso + guardrail de saída aprova ──► resposta final (+ escalonamento humano se aplicável)
         │
@@ -101,7 +101,7 @@ Actions rodando os testes a cada push) — os 27 testes automatizados rodam loca
 `pytest`. Registrado como próximo passo na seção de Reflexão.
 
 **Estratégia de confiabilidade:** guardrail de entrada rejeita payload inválido antes de
-qualquer cálculo; timeout de 8s protege contra travamento na chamada ao LLM; guardrail de
+qualquer cálculo; timeout de 20s protege contra travamento na chamada ao LLM; guardrail de
 saída rejeita JSON malformado ou fora do intervalo esperado; fallback determinístico
 específico por zona de confiança garante que o usuário sempre recebe uma resposta útil,
 nunca um erro técnico cru. Essa estratégia foi validada não só em teoria, mas contra uma
@@ -116,7 +116,7 @@ Google) — o fallback assumiu corretamente, dentro e fora do container Docker
 **Modelo base e ferramentas:**
 - **Modelo tabular:** Random Forest (`scikit-learn`), `class_weight="balanced"` para compensar o desbalanceamento de classes — recall 0.78 na classe Churn, ROC-AUC 0.8388, contra recall 0.52 do baseline linear (Solution A) sem esse ajuste.
 - **Explicabilidade:** SHAP (`shap.TreeExplainer`) — contribuição matemática **local**, exata, de cada variável para o score daquele cliente específico, não coeficientes globais do modelo inteiro.
-- **LLM:** Gemini 2.5 Flash via API (`google-generativeai`) — escolhido por ser rápido e gratuito no free tier para o volume desta entrega. O LLM nunca decide os fatores de risco; só traduz os valores SHAP (já calculados matematicamente) para linguagem de negócio, reduzindo o risco de alucinação.
+- **LLM:** Gemini 3.5 Flash via API (`google-generativeai`) — gratuito no free tier para o volume desta entrega. Migrado de `gemini-2.5-flash` em 11/07/2026 depois que esse modelo passou a devolver 404 em produção antes da data de desligamento oficialmente anunciada (`docs/adr/002-migracao-gemini-3.5-flash.md`). O LLM nunca decide os fatores de risco; só traduz os valores SHAP (já calculados matematicamente) para linguagem de negócio, reduzindo o risco de alucinação.
 
 **Dados e contexto:** Telco Customer Churn (Kaggle/IBM), ~7.043 clientes, 21 colunas,
 dados fictícios de uma empresa de telecom fictícia. Licença Kaggle vaga sobre termos de
@@ -133,6 +133,7 @@ público com origem, licença, como obter e vieses conhecidos (dados sintéticos
 - O timeout inicial do LLM na Solution C (2.0s, sugestão do próprio README de planejamento) **estourava quase sempre** contra a latência real do Gemini 2.5 Flash (uma chamada simples já leva ~1.5s); foi ajustado para 8.0s após medição empírica — e mesmo assim, duas chamadas reais na mesma sessão retornaram `DeadlineExceeded` (falha real do lado do Google), confirmando que o fallback não é um exercício teórico.
 - Tentei validar a regra de escalonamento de alto risco (probabilidade > 95% + fatura alta) via uma requisição HTTP real, mas nenhum cliente do dataset atinge essa probabilidade com o modelo treinado (máximo observado: ~0.926) — resolvido testando a lógica de decisão diretamente (testes unitários em `test_solution_c.py`), não escondendo a limitação.
 - O guardrail de saída só foi adicionado na Solution C depois de perceber, comparando com A/B, que nenhuma das duas primeiras protegia contra o LLM devolver algo malformado.
+- **11/07/2026 — migração para gemini-3.5-flash (`docs/adr/002-migracao-gemini-3.5-flash.md`):** em produção, `gemini-2.5-flash` passou a devolver 404 "no longer available" (confirmado como indisponibilidade ampla do lado do Google, não restrição de conta nova). A migração para `gemini-3.5-flash` expôs dois problemas que o modelo anterior mascarava por sorte: (1) a latência real subiu para ~12s-16s por chamada completa, exigindo novo ajuste de timeout (8.0s → 20.0s); (2) o prompt pedia `"churn_probability"` como "float numérico" sem fixar a escala, e o `gemini-2.5-flash` inferia corretamente a escala decimal (0-1) enquanto o `gemini-3.5-flash` ecoava o valor no mesmo formato percentual mostrado no prompt (`46.06` em vez de `0.4606`) — reprovado corretamente pelo guardrail de saída, mas o LLM nunca teria sucesso sem tornar a instrução explícita. Evidência de que o guardrail de saída generaliza para falhas não previstas originalmente, mesmo trocando o modelo.
 
 ---
 
@@ -159,10 +160,15 @@ suficiente para que, mesmo com timeout de 8s, algumas chamadas reais tenham esto
 (`DeadlineExceeded`) durante a validação desta sessão — taxa de fallback não medida
 estatisticamente (poucas chamadas manuais/de teste), mas observada em pelo menos 2 de
 ~6 chamadas reais feitas nesta sessão. Sinaliza que a latência do LLM merece monitoramento
-contínuo em produção, não só calibração pontual.
+contínuo em produção, não só calibração pontual. **Atualização pós-migração (11/07/2026,
+`docs/adr/002-migracao-gemini-3.5-flash.md`):** com `gemini-3.5-flash`, 3 chamadas reais
+consecutivas com o prompt completo levaram 11.7s-15.6s cada — mais lento que o modelo
+anterior, daí o timeout ter subido para 20s.
 
-**Custo por chamada:** Gemini 2.5 Flash no free tier — custo efetivo de $0 nesta entrega
-acadêmica. O modelo tabular roda localmente (custo de inferência desprezível).
+**Custo por chamada:** Gemini 3.5 Flash no free tier (família Flash segue com acesso
+gratuito no Google AI Studio) — custo efetivo de $0 nesta entrega acadêmica, mesma
+condição que valia para o `gemini-2.5-flash` usado até a migração de 11/07/2026. O modelo
+tabular roda localmente (custo de inferência desprezível).
 
 **UX:** painel web simples (`solutions/solution-c/static/index.html`) com formulário
 único para os 19 campos do cliente, resultado mostrado com badges de zona de confiança e
@@ -176,7 +182,7 @@ amigável, nunca um stack trace — testado manualmente com Playwright
 
 ## Demonstração
 
-_[PENDENTE — link do vídeo. Roteiro sugerido, agora usando a aplicação já no ar: (1) abrir https://churn-solution-c.onrender.com/ (avisar que o free tier pode levar ~1min pra acordar) e mostrar o formulário; (2) preencher um cliente de alto risco (contrato mensal, fibra óptica, tenure baixo) e mostrar a explicação real do Gemini 2.5 Flash; (3) preencher um cliente de zona cinzenta (ex: os valores em `docs/evidence/04-solution-c-validacao.md` §3) e mostrar a ação exploratória leve; (4) tentar um payload com categoria fora de escopo (`Contract` inválido, testável em `/docs`) e mostrar o HTTP 422; (5) opcional: mostrar `docs/evidence/04-solution-c-validacao.md` §4 e `docs/evidence/11-deploy-render.md` como prova de fallback ativado por falhas reais da API, tanto local quanto em produção.]_
+_[PENDENTE — link do vídeo. Roteiro sugerido, agora usando a aplicação já no ar: (1) abrir https://churn-solution-c.onrender.com/ (avisar que o free tier pode levar ~1min pra acordar) e mostrar o formulário; (2) preencher um cliente de alto risco (contrato mensal, fibra óptica, tenure baixo) e mostrar a explicação real do Gemini 3.5 Flash; (3) preencher um cliente de zona cinzenta (ex: os valores em `docs/evidence/04-solution-c-validacao.md` §3) e mostrar a ação exploratória leve; (4) tentar um payload com categoria fora de escopo (`Contract` inválido, testável em `/docs`) e mostrar o HTTP 422; (5) opcional: mostrar `docs/evidence/04-solution-c-validacao.md` §4 e `docs/evidence/11-deploy-render.md` como prova de fallback ativado por falhas reais da API, tanto local quanto em produção.]_
 
 ---
 
@@ -232,4 +238,4 @@ aqui, por estarem fora do escopo desta disciplina.
 2. Google — Gemini API / `google-generativeai` SDK: https://ai.google.dev/gemini-api/docs
 3. Lundberg, S. & Lee, S. — *A Unified Approach to Interpreting Model Predictions* (SHAP): https://github.com/shap/shap
 4. FastAPI — documentação oficial: https://fastapi.tiangolo.com/
-5. `docs/adr/001-escolha-da-solucao.md`, `docs/merge-readiness-pack.md` e `docs/evidence/` — evidências e decisões internas deste projeto
+5. `docs/adr/001-escolha-da-solucao.md`, `docs/adr/002-migracao-gemini-3.5-flash.md`, `docs/merge-readiness-pack.md` e `docs/evidence/` — evidências e decisões internas deste projeto

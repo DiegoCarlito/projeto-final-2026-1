@@ -19,9 +19,9 @@ Você é a única ferramenta de IA de desenvolvimento deste projeto — o uso do
 Há duas IAs completamente distintas aqui, cada uma com escopo fixo e não intercambiável:
 
 1. **Claude Code (você)** — ferramenta de desenvolvimento. Especifica, escreve, executa e revisa o projeto localmente. Nunca aparece dentro do produto final.
-2. **Gemini 2.5 Flash, via API (`google-generativeai`)** — dependência de runtime do **produto**. É o modelo que o agente de churn chama em produção para gerar a explicação/resposta final ao usuário (ver `agent.md` e `solutions/*/src/agent_*.py`).
+2. **Gemini, via API (`google-generativeai`)** — dependência de runtime do **produto**. É o modelo que o agente de churn chama em produção para gerar a explicação/resposta final ao usuário (ver `agent.md` e `solutions/*/src/agent_*.py`). Solution C (a única em produção) usa `gemini-3.5-flash` desde a migração registrada em `docs/adr/002-migracao-gemini-3.5-flash.md` — `gemini-2.5-flash` começou a devolver 404 antes da data de desligamento anunciada. Solutions A e B (congeladas, ver ADR-001) permanecem em `gemini-2.5-flash` como registro histórico, sem manutenção.
 
-Nunca proponha trocar a API do produto (Gemini 2.5 Flash) por outro provedor, e nunca trate o fato de você ser Claude como motivo para reescrever a integração de LLM do produto. Essa escolha de stack de runtime já foi tomada e vale para as três soluções. Se um dia precisar mudar, é decisão explícita do usuário registrada em ADR — nunca uma troca silenciosa.
+Nunca proponha trocar a API do produto (Gemini) por outro provedor, e nunca trate o fato de você ser Claude como motivo para reescrever a integração de LLM do produto. Essa escolha de stack de runtime já foi tomada e vale para as três soluções. Trocar de *versão* do Gemini é uma decisão explícita do usuário registrada em ADR (ver exemplo acima) — nunca uma troca silenciosa, e trocar de *provedor* está fora de cogitação.
 
 ## Regras operacionais
 

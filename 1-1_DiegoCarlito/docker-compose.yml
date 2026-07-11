@@ -8,6 +8,6 @@ services:
     environment:
       # Sem GEMINI_API_KEY, o agente sobe normalmente e responde em modo de fallback
       # (degradação graciosa — ver agent.md §7). Defina a variável no shell antes de
-      # rodar para ativar as explicações reais do Gemini 2.5 Flash:
+      # rodar para ativar as explicações reais do Gemini 3.5 Flash:
       #   GEMINI_API_KEY=sua_chave docker compose up --build
       - GEMINI_API_KEY=${GEMINI_API_KEY:-}
